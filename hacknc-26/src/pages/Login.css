@@ -17,15 +17,6 @@
   text-align: left;
 }
 
-.eyebrow {
-  margin: 0 0 12px;
-  color: #7c3aed;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
 .login-card h1 {
   margin: 0;
   font-size: 36px;
@@ -149,6 +140,23 @@ button:disabled {
 .signed-in {
   color: #166534;
   background: #f0fdf4;
+}
+
+.auth-switch {
+  margin: 20px 0 0;
+  color: #6b6375;
+  font-size: 14px;
+  text-align: center;
+}
+
+.auth-switch button {
+  border: 0;
+  padding: 0;
+  color: #7c3aed;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
 }
 
 @media (max-width: 520px) {

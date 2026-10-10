@@ -19,7 +19,7 @@ function firebaseErrorMessage(error) {
   return messages[error.code] || error.message || 'Authentication failed.'
 }
 
-function Login() {
+function Login({ onRegister }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -83,7 +83,6 @@ function Login() {
   return (
     <main className="login-page">
       <section className="login-card" aria-labelledby="login-title">
-        <p className="eyebrow">HackNC 2026</p>
         <h1 id="login-title">Welcome back</h1>
         <p className="login-subtitle">Sign in to continue to your account.</p>
 
@@ -140,6 +139,13 @@ function Login() {
             {status.message}
           </p>
         )}
+
+        <p className="auth-switch">
+          Don&apos;t have an account?{' '}
+          <button type="button" onClick={onRegister}>
+            Create one
+          </button>
+        </p>
       </section>
     </main>
   )
