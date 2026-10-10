@@ -8,6 +8,7 @@ import { Routes, Route } from 'react-router-dom'
 function App() {
   return (
     <>
+      <MenuBar />
       <Routes>
         <Route path="/" element={<Login />} /> {/* Start at the Login page */}
         <Route path="/login" element={<Login />} />
@@ -15,7 +16,6 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="*" element={<h1>404 - Page not found</h1>} /> {/* When there isn't a page */}
       </Routes>
-      <MenuBar />
     </>
   )
 }
