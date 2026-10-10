@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { registerUser, signInWithGoogle } from '../auth/auth'
 import './Login.css'
+import { Link } from 'react-router-dom'
 
 function firebaseErrorMessage(error) {
   const messages = {
@@ -17,7 +18,7 @@ function firebaseErrorMessage(error) {
   return messages[error.code] || error.message || 'Registration failed.'
 }
 
-function Register({ onLogin }) {
+function Register() {
   const [displayName, setDisplayName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -134,9 +135,7 @@ function Register({ onLogin }) {
 
         <p className="auth-switch">
           Already have an account?{' '}
-          <button type="button" onClick={onLogin}>
-            Sign in
-          </button>
+          <Link to="/login">Sign in</Link>
         </p>
       </section>
     </main>

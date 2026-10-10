@@ -6,6 +6,7 @@ import {
   signInWithGoogle,
 } from '../auth/auth'
 import './Login.css'
+import { Link } from 'react-router-dom'
 
 function firebaseErrorMessage(error) {
   const messages = {
@@ -19,7 +20,7 @@ function firebaseErrorMessage(error) {
   return messages[error.code] || error.message || 'Authentication failed.'
 }
 
-function Login({ onRegister }) {
+function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -141,10 +142,8 @@ function Login({ onRegister }) {
         )}
 
         <p className="auth-switch">
-          Don&apos;t have an account?{' '}
-          <button type="button" onClick={onRegister}>
-            Create one
-          </button>
+          Don't have an account?{' '}
+          <Link to="/register">Create one</Link>
         </p>
       </section>
     </main>
