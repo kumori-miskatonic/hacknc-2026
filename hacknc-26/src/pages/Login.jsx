@@ -6,7 +6,7 @@ import {
   signInWithGoogle,
 } from '../auth/auth'
 import './Login.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 function firebaseErrorMessage(error) {
   const messages = {
@@ -21,6 +21,7 @@ function firebaseErrorMessage(error) {
 }
 
 function Login() {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -39,45 +40,45 @@ function Login() {
   }, [])
 
   async function handleSubmit(event) {
-    event.preventDefault()
-    setStatus({ type: '', message: '' })
-    setIsLoading(true)
+    event.preventDefault();
+    setStatus({ type: '', message: '' });
+    setIsLoading(true);
 
     try {
       await loginUser(email, password)
-      setStatus({ type: 'success', message: 'You are signed in.' })
+      navigate('/dashboard')
     } catch (error) {
-      setStatus({ type: 'error', message: firebaseErrorMessage(error) })
+      setStatus({ type: 'error', message: firebaseErrorMessage(error) });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
   async function handleGoogleSignIn() {
-    setStatus({ type: '', message: '' })
-    setIsLoading(true)
+    setStatus({ type: '', message: '' });
+    setIsLoading(true);
 
     try {
       await signInWithGoogle()
-      setStatus({ type: 'success', message: 'You are signed in.' })
+      navigate('/dashboard')
     } catch (error) {
-      setStatus({ type: 'error', message: firebaseErrorMessage(error) })
+      setStatus({ type: 'error', message: firebaseErrorMessage(error) });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
   async function handlePasswordReset() {
     if (!email) {
-      setStatus({ type: 'error', message: 'Enter your email first.' })
-      return
+      setStatus({ type: 'error', message: 'Enter your email first.' });
+      return;
     }
 
     try {
-      await resetPassword(email)
-      setStatus({ type: 'success', message: 'Password reset email sent.' })
+      await resetPassword(email);
+      setStatus({ type: 'success', message: 'Password reset email sent.' });
     } catch (error) {
-      setStatus({ type: 'error', message: firebaseErrorMessage(error) })
+      setStatus({ type: 'error', message: firebaseErrorMessage(error) });
     }
   }
 

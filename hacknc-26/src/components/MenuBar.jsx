@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react'
 import { logoutUser, observeAuthState } from '../auth/auth'
 import './MenuBar.css'
+import { useNavigate } from 'react-router-dom'
 
 function MenuBar() {
-  const [user, setUser] = useState(null)
-  const [error, setError] = useState('')
-  const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState('');
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     try {
-      return observeAuthState(setUser)
+      return observeAuthState(setUser);
     } catch (authError) {
       queueMicrotask(() => setError(authError.message))
       return undefined
@@ -21,11 +23,12 @@ function MenuBar() {
     setIsLoggingOut(true)
 
     try {
-      await logoutUser()
+      await logoutUser();
+      navigate('/login');
     } catch (authError) {
       setError(authError.message || 'Unable to log out.')
     } finally {
-      setIsLoggingOut(false)
+      setIsLoggingOut(false);
     }
   }
 
