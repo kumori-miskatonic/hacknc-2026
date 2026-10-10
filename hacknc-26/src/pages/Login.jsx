@@ -84,7 +84,7 @@ function Login({ onRegister }) {
     <main className="login-page">
       <section className="login-card" aria-labelledby="login-title">
         <h1 id="login-title">Welcome back</h1>
-        <p className="login-subtitle">Sign in to continue to your account.</p>
+        <p className="login-subtitle">Sign in to continue to your account</p>
 
         {user && (
           <p className="signed-in" role="status">
@@ -93,7 +93,7 @@ function Login({ onRegister }) {
         )}
 
         <form onSubmit={handleSubmit}>
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email" className="general-black-text">Email</label>
           <input
             id="email"
             type="email"
@@ -104,8 +104,8 @@ function Login({ onRegister }) {
           />
 
           <div className="password-label">
-            <label htmlFor="password">Password</label>
-            <button type="button" onClick={handlePasswordReset}>
+            <label htmlFor="password" className="general-black-text">Password</label>
+            <button type="button" onClick={handlePasswordReset} className="">
               Forgot password?
             </button>
           </div>
@@ -124,9 +124,9 @@ function Login({ onRegister }) {
           </button>
         </form>
 
-        <div className="divider"><span>or</span></div>
+        <div className="divider"><span className="login-or">or</span></div>
         <button
-          className="google-button"
+          className="google-button general-ui-button"
           type="button"
           onClick={handleGoogleSignIn}
           disabled={isLoading}

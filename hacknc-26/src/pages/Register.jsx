@@ -89,7 +89,7 @@ function Register({ onLogin }) {
             required
           />
 
-          <label htmlFor="register-password">Password</label>
+          <label htmlFor="register-password" className="link-txt">Password</label>
           <input
             id="register-password"
             type="password"
@@ -118,7 +118,7 @@ function Register({ onLogin }) {
 
         <div className="divider"><span>or</span></div>
         <button
-          className="google-button"
+          className="google-button general-ui-button"
           type="button"
           onClick={handleGoogleSignIn}
           disabled={isLoading}
