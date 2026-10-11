@@ -1,28 +1,21 @@
 import { useState } from 'react'
 import { getFirebaseAuth } from '../auth/firebase'
+import {
+  createChatRoom,
+  findChatRoom,
+} from '../services/chat-room-service'
 import { sendEncryptedMessage } from '../services/message-service'
 
 const TEST_ROOM_ID = 'general'
-const CHAT_KEY_LENGTH = 6
-const CHAT_KEY_CHARACTERS =
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-
-function createChatKey() {
-  const randomValues = crypto.getRandomValues(
-    new Uint32Array(CHAT_KEY_LENGTH),
-  )
-
-  return Array.from(
-    randomValues,
-    (value) => CHAT_KEY_CHARACTERS[value % CHAT_KEY_CHARACTERS.length],
-  ).join('')
-}
 
 export default function Dashboard() {
   const [status, setStatus] = useState('')
   const [isSending, setIsSending] = useState(false)
+  const [roomName, setRoomName] = useState('')
   const [chatKey, setChatKey] = useState('')
   const [chatKeyInput, setChatKeyInput] = useState('')
+  const [isCreatingChat, setIsCreatingChat] = useState(false)
+  const [isJoiningChat, setIsJoiningChat] = useState(false)
 
   async function handleTestSend() {
     const user = getFirebaseAuth().currentUser
@@ -49,24 +42,37 @@ export default function Dashboard() {
     }
   }
 
-  function handleCreateChat() {
-    const newChatKey = createChatKey()
-    setChatKey(newChatKey)
-    setChatKeyInput(newChatKey)
-    setStatus(`Chat created. Share this key: ${newChatKey}`)
+  async function handleCreateChat() {
+    setStatus('')
+    setIsCreatingChat(true)
+
+    try {
+      const room = await createChatRoom(roomName)
+      setRoomName('')
+      setChatKey(room.chatKey)
+      setChatKeyInput(room.chatKey)
+      setStatus(`Chat created. Share this key: ${room.chatKey}`)
+    } catch (error) {
+      setStatus(error.message || 'Unable to create chat.')
+    } finally {
+      setIsCreatingChat(false)
+    }
   }
 
-  function handleJoinChat(event) {
+  async function handleJoinChat(event) {
     event.preventDefault()
-    const requestedChatKey = chatKeyInput.trim()
+    setStatus('')
+    setIsJoiningChat(true)
 
-    if (!/^[A-Za-z0-9]{6}$/.test(requestedChatKey)) {
-      setStatus('Enter a six-character alphanumeric chat key.')
-      return
+    try {
+      const room = await findChatRoom(chatKeyInput)
+      setChatKey(room.chatKey)
+      setStatus(`Connected to "${room.name}".`)
+    } catch (error) {
+      setStatus(error.message || 'Unable to join chat.')
+    } finally {
+      setIsJoiningChat(false)
     }
-
-    setChatKey(requestedChatKey)
-    setStatus(`Joined chat: ${requestedChatKey}`)
   }
 
   return (
@@ -76,20 +82,34 @@ export default function Dashboard() {
         {isSending ? 'Sending...' : 'Send encrypted test message'}
       </button>
       <div>
-        <button type="button" onClick={handleCreateChat}>
-          Create chat key
+        <input
+          type="text"
+          value={roomName}
+          onChange={(event) => setRoomName(event.target.value)}
+          maxLength={100}
+          placeholder="Room name"
+          aria-label="Room name"
+        />
+        <button
+          type="button"
+          onClick={handleCreateChat}
+          disabled={isCreatingChat}
+        >
+          {isCreatingChat ? 'Creating...' : 'Create chat key'}
         </button>
         <form onSubmit={handleJoinChat}>
           <input
             type="text"
             value={chatKeyInput}
             onChange={(event) => setChatKeyInput(event.target.value)}
-            maxLength={CHAT_KEY_LENGTH}
+            maxLength={6}
             pattern="[A-Za-z0-9]{6}"
             placeholder="Chat key"
             aria-label="Chat key"
           />
-          <button type="submit">Join chat</button>
+          <button type="submit" disabled={isJoiningChat}>
+            {isJoiningChat ? 'Joining...' : 'Join chat'}
+          </button>
         </form>
       </div>
       {chatKey && <p>Current chat: {chatKey}</p>}
