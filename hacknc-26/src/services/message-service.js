@@ -1,13 +1,16 @@
 import {
   addDoc,
   collection,
+  onSnapshot,
+  orderBy,
+  query,
   serverTimestamp,
 } from 'firebase/firestore'
 
 import { getFirebaseAuth, db } from '../auth/firebase'
 import { getPublicKey } from './key-service'
 import { deriveConversationKey } from '../crypto/key-exchange'
-import { encryptMessage } from '../crypto/message-crypto'
+import { decryptMessage, encryptMessage } from '../crypto/message-crypto'
 
 export async function sendEncryptedMessage(
   roomId,
@@ -43,7 +46,62 @@ export async function sendEncryptedMessage(
     {
       ...encrypted,
       senderId: sender.uid,
+      recipientId: recipientUid,
       createdAt: serverTimestamp(),
     }
+  )
+}
+
+export function subscribeToMessages(
+  roomId,
+  currentUserUid,
+  onMessages,
+  onError,
+) {
+  const messagesQuery = query(
+    collection(db, 'rooms', roomId, 'messages'),
+    orderBy('createdAt', 'asc'),
+  )
+
+  return onSnapshot(
+    messagesQuery,
+    async (snapshot) => {
+      try {
+        const messages = await Promise.all(
+          snapshot.docs
+            .filter((messageSnapshot) => {
+              const data = messageSnapshot.data()
+              return (
+                data.senderId === currentUserUid ||
+                data.recipientId === currentUserUid
+              )
+            })
+            .map(async (messageSnapshot) => {
+              const data = messageSnapshot.data()
+              const senderPublicKey = await getPublicKey(data.senderId)
+              const conversationKey = await deriveConversationKey(
+                currentUserUid,
+                senderPublicKey,
+                roomId,
+              )
+              const plaintext = await decryptMessage(
+                conversationKey,
+                data,
+              )
+
+              return {
+                id: messageSnapshot.id,
+                ...data,
+                plaintext,
+              }
+            }),
+        )
+
+        onMessages(messages)
+      } catch (error) {
+        onError(error)
+      }
+    },
+    onError,
   )
 }

@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getFirebaseAuth } from '../auth/firebase'
 import { findChatRoom } from '../services/chat-room-service'
-import { sendEncryptedMessage } from '../services/message-service'
+import {
+  sendEncryptedMessage,
+  subscribeToMessages,
+} from '../services/message-service'
 import './Chat.css'
 
 export default function Chat() {
@@ -12,6 +15,7 @@ export default function Chat() {
   const [message, setMessage] = useState('')
   const [sendStatus, setSendStatus] = useState('')
   const [isSending, setIsSending] = useState(false)
+  const [messages, setMessages] = useState([])
 
   useEffect(() => {
     let isCurrent = true
@@ -36,6 +40,26 @@ export default function Chat() {
     }
   }, [chatKey])
 
+  useEffect(() => {
+    const user = getFirebaseAuth().currentUser
+
+    if (!user) {
+      queueMicrotask(() => {
+        setError('You must be signed in to view this chat.')
+      })
+      return undefined
+    }
+
+    return subscribeToMessages(
+      chatKey,
+      user.uid,
+      setMessages,
+      (messageError) => {
+        setError(messageError.message || 'Unable to load messages.')
+      },
+    )
+  }, [chatKey])
+
   async function handleSendMessage(event) {
     event.preventDefault()
     const user = getFirebaseAuth().currentUser
@@ -49,11 +73,11 @@ export default function Chat() {
     setSendStatus('')
 
     try {
-      await sendEncryptedMessage(chatKey, user.uid, message)
-      setMessage('')
-      setSendStatus('Encrypted message sent.')
+      await sendEncryptedMessage(chatKey, "lxneXChmXNf0HWLeACg2ipFHp543", message); {/*Testing*/}
+      setMessage('');
+      setSendStatus('Encrypted message sent.');
     } catch (sendError) {
-      setSendStatus(sendError.message || 'Unable to send encrypted message.')
+      setSendStatus(sendError.message || 'Unable to send encrypted message.');
     } finally {
       setIsSending(false)
     }
@@ -70,6 +94,17 @@ export default function Chat() {
       <div className="div1">
         <div className="div2 past-messages">
           <p>Past Messages</p>
+          {messages.map((chatMessage) => (
+            <p key={chatMessage.id}>
+              <strong>
+                {chatMessage.senderId === getFirebaseAuth().currentUser?.uid
+                  ? 'You'
+                  : chatMessage.senderId}
+                :
+              </strong>{' '}
+              {chatMessage.plaintext}
+            </p>
+          ))}
         </div>
         <div className="div2 chat">Chats</div>
       </div>
