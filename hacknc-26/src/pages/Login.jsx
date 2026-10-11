@@ -86,7 +86,7 @@ function Login() {
     <main className="login-page">
       <section className="login-card" aria-labelledby="login-title">
         <h1 id="login-title">Welcome back</h1>
-        <p className="login-subtitle">Sign in to continue to your account.</p>
+        <p className="login-subtitle">Sign in to continue to your account</p>
 
         {user && (
           <p className="signed-in" role="status">
@@ -94,10 +94,12 @@ function Login() {
           </p>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="email">Email</label>
+        <form onSubmit={handleSubmit}>                           
+          <label htmlFor="email" className="general-black-text email">
+            Email</label>
           <input
             id="email"
+            className="custom-font"
             type="email"
             autoComplete="email"
             value={email}
@@ -107,7 +109,7 @@ function Login() {
 
           <div className="password-label">
             <label htmlFor="password">Password</label>
-            <button type="button" onClick={handlePasswordReset}>
+            <button type="button" onClick={handlePasswordReset} className="link-txt">
               Forgot password?
             </button>
           </div>
@@ -121,14 +123,15 @@ function Login() {
             required
           />
 
-          <button className="primary-button" type="submit" disabled={isLoading}>
+          <button className="primary-button custom-font" type="submit" disabled={isLoading}>
             {isLoading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
-        <div className="divider"><span>or</span></div>
+        <div className="divider"><span className="login-or general-black-text">
+          or</span></div>
         <button
-          className="google-button"
+          className="google-button general-ui-button custom-font"
           type="button"
           onClick={handleGoogleSignIn}
           disabled={isLoading}
