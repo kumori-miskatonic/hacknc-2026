@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getFirebaseAuth } from '../auth/firebase'
-import { findChatRoom } from '../services/chat-room-service'
+import {
+  findChatRoom,
+  subscribeToChatMembers,
+} from '../services/chat-room-service'
 import {
   sendEncryptedMessage,
   subscribeToMessages,
@@ -11,6 +14,7 @@ import './Chat.css'
 export default function Chat() {
   const { chatKey } = useParams()
   const [roomName, setRoomName] = useState('')
+  const [recipientUid, setRecipientUid] = useState('')
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const [sendStatus, setSendStatus] = useState('')
@@ -50,14 +54,45 @@ export default function Chat() {
       return undefined
     }
 
-    return subscribeToMessages(
+    const unsubscribeMembers = subscribeToChatMembers(
+      chatKey,
+      (members) => {
+        const otherMember = members.find((member) => member.uid !== user.uid)
+        setRecipientUid(otherMember?.uid || '')
+      },
+      (memberError) => {
+        setError(memberError.message || 'Unable to load chat members.')
+      },
+    )
+
+    const unsubscribeMessages = subscribeToMessages(
       chatKey,
       user.uid,
-      setMessages,
+      (receivedMessages) => {
+        setMessages((currentMessages) => {
+          const messagesById = new Map(
+            currentMessages.map((chatMessage) => [
+              chatMessage.id,
+              chatMessage,
+            ]),
+          )
+
+          receivedMessages.forEach((chatMessage) => {
+            messagesById.set(chatMessage.id, chatMessage)
+          })
+
+          return Array.from(messagesById.values())
+        })
+      },
       (messageError) => {
         setError(messageError.message || 'Unable to load messages.')
       },
     )
+
+    return () => {
+      unsubscribeMembers()
+      unsubscribeMessages()
+    }
   }, [chatKey])
 
   async function handleSendMessage(event) {
@@ -73,11 +108,21 @@ export default function Chat() {
     setSendStatus('')
 
     try {
-      await sendEncryptedMessage(chatKey, "lxneXChmXNf0HWLeACg2ipFHp543", message); {/*Testing*/}
-      setMessage('');
-      setSendStatus('Encrypted message sent.');
+      if (!recipientUid) {
+        throw new Error(
+          'A second member must join before you can send messages.',
+        )
+      }
+
+      const sentMessage = await sendEncryptedMessage(
+        chatKey,
+        recipientUid,
+        message,
+      )
+      setMessages((currentMessages) => [...currentMessages, sentMessage])
+      setMessage('')
     } catch (sendError) {
-      setSendStatus(sendError.message || 'Unable to send encrypted message.');
+      setSendStatus(sendError.message || 'Unable to send encrypted message.')
     } finally {
       setIsSending(false)
     }

@@ -1,6 +1,9 @@
 import {
   doc,
+  collection,
+  getDocs,
   getDoc,
+  onSnapshot,
   serverTimestamp,
   setDoc,
   writeBatch,
@@ -103,4 +106,36 @@ export async function joinChatRoom(chatKey) {
   })
 
   return room
+}
+
+export async function getChatMembers(chatKey) {
+  const user = getFirebaseAuth().currentUser
+
+  if (!user) {
+    throw new Error('You must sign in first.')
+  }
+
+  const membersSnapshot = await getDocs(
+    collection(db, 'rooms', chatKey, 'members'),
+  )
+
+  return membersSnapshot.docs.map((memberSnapshot) => ({
+    uid: memberSnapshot.id,
+    ...memberSnapshot.data(),
+  }))
+}
+
+export function subscribeToChatMembers(chatKey, onMembers, onError) {
+  return onSnapshot(
+    collection(db, 'rooms', chatKey, 'members'),
+    (snapshot) => {
+      onMembers(
+        snapshot.docs.map((memberSnapshot) => ({
+          uid: memberSnapshot.id,
+          ...memberSnapshot.data(),
+        })),
+      )
+    },
+    onError,
+  )
 }

@@ -41,7 +41,7 @@ export async function sendEncryptedMessage(
 
   const encrypted = await encryptMessage(key, plaintext)
 
-  await addDoc(
+  const messageReference = await addDoc(
     collection(db, 'rooms', roomId, 'messages'),
     {
       ...encrypted,
@@ -50,6 +50,14 @@ export async function sendEncryptedMessage(
       createdAt: serverTimestamp(),
     }
   )
+
+  return {
+    id: messageReference.id,
+    ...encrypted,
+    senderId: sender.uid,
+    recipientId: recipientUid,
+    plaintext,
+  }
 }
 
 export function subscribeToMessages(
@@ -71,28 +79,34 @@ export function subscribeToMessages(
           snapshot.docs
             .filter((messageSnapshot) => {
               const data = messageSnapshot.data()
-              return (
-                data.senderId === currentUserUid ||
-                data.recipientId === currentUserUid
-              )
+              return data.recipientId === currentUserUid
             })
             .map(async (messageSnapshot) => {
               const data = messageSnapshot.data()
-              const senderPublicKey = await getPublicKey(data.senderId)
-              const conversationKey = await deriveConversationKey(
-                currentUserUid,
-                senderPublicKey,
-                roomId,
-              )
-              const plaintext = await decryptMessage(
-                conversationKey,
-                data,
-              )
+              try {
+                const senderPublicKey = await getPublicKey(data.senderId)
+                const conversationKey = await deriveConversationKey(
+                  currentUserUid,
+                  senderPublicKey,
+                  roomId,
+                )
+                const plaintext = await decryptMessage(
+                  conversationKey,
+                  data,
+                )
 
-              return {
-                id: messageSnapshot.id,
-                ...data,
-                plaintext,
+                return {
+                  id: messageSnapshot.id,
+                  ...data,
+                  plaintext,
+                }
+              } catch (error) {
+                return {
+                  id: messageSnapshot.id,
+                  ...data,
+                  plaintext: '[Unable to decrypt this message]',
+                  decryptionError: error.message,
+                }
               }
             }),
         )
