@@ -6,41 +6,13 @@ import {
 } from '../services/chat-room-service'
 import { sendEncryptedMessage } from '../services/message-service'
 
-const TEST_ROOM_ID = 'general'
-
 export default function Dashboard() {
   const [status, setStatus] = useState('')
-  const [isSending, setIsSending] = useState(false)
   const [roomName, setRoomName] = useState('')
   const [chatKey, setChatKey] = useState('')
   const [chatKeyInput, setChatKeyInput] = useState('')
   const [isCreatingChat, setIsCreatingChat] = useState(false)
   const [isJoiningChat, setIsJoiningChat] = useState(false)
-
-  async function handleTestSend() {
-    const user = getFirebaseAuth().currentUser
-
-    if (!user) {
-      setStatus('You must be signed in to send a test message.')
-      return
-    }
-
-    setIsSending(true)
-    setStatus('')
-
-    try {
-      await sendEncryptedMessage(
-        TEST_ROOM_ID,
-        user.uid,
-        'Encrypted test message',
-      )
-      setStatus('Encrypted message sent to Firestore.')
-    } catch (error) {
-      setStatus(error.message || 'Unable to send encrypted message.')
-    } finally {
-      setIsSending(false)
-    }
-  }
 
   async function handleCreateChat() {
     setStatus('')
@@ -78,9 +50,6 @@ export default function Dashboard() {
   return (
     <div className="dashboard">
       <h1>Welcome to the Dashboard</h1>
-      <button type="button" onClick={handleTestSend} disabled={isSending}>
-        {isSending ? 'Sending...' : 'Send encrypted test message'}
-      </button>
       <div>
         <input
           type="text"
