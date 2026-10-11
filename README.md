@@ -1,5 +1,5 @@
-# Project Name
-Project name is a web chat app that gives users the ability to keep their information anonymous while talking to other users.
+# ChatBubble
+ChatBubble is a web chat app that gives users the ability to keep their information anonymous while talking to other users.
 
 ## Table of Contents
 * [About the Project](#about-the-project)
@@ -8,10 +8,11 @@ Project name is a web chat app that gives users the ability to keep their inform
 * [Installation](installation)
 
 ## About the Project
-The inspiration for Project Name was the need for a chat app that allows you to talk to others without the need to give them your daily contact information. Using encryption, it blocks unwanted chats from unknown users.
+The inspiration for ChatBubble was the need for a chat app that allows you to talk to others without the need to give them your daily contact information. Using encryption, it blocks chat information from unknown users.
+
 ## Key Features
 - Create an account store securely through Firebase Authentication
-- Chat with another user without exchanging contact info
+- Chat with another user without exchanging contact info, using a randomly generated code
 - Send encrypted messages through the web
 - View past chats and message history 
 
