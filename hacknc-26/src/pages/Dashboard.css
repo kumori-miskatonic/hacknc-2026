@@ -17,7 +17,7 @@
 .dashboard-main {
   flex: 1;
   width: min(90%, 600px);
-  height: 90%;
+  height: 70vh;
   margin: auto;
   margin-top: 70px;
   align-self: center;
@@ -30,9 +30,17 @@
 
 .dashboard-main h1 {
   margin: 30px;
+  padding-bottom: 20px;
   font-size: 36px;
-  color: #000;
   font-family: 'Capitol City', sans-serif;
+  color: transparent;
+  background: #286780;
+  background: linear-gradient(90deg, rgba(40, 103, 128, 1) 0%, rgba(22, 135, 65, 1) 55%, rgba(44, 191, 179, 1) 100%);
+  background-clip: text;
+  text-align: center;
+  top:auto;
+  left: auto;
+  background-size: 900px;
 }
 
 .dashboard-sidebar {
@@ -50,6 +58,7 @@ input {
   background: #fff;
   color: #000;
   font-size: 16px;
+  font-family: 'VCR OSD Mono', sans-serif;
 }
 
 input:focus {

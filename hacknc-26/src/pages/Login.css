@@ -151,7 +151,8 @@ p, label,
 } */
 
 .primary-button:hover,
-.google-button:hover {
+.google-button:hover,
+.general-ui-button:hover {
   background-color: #4279ca;
 }
 

@@ -12,6 +12,10 @@
     color: #000;
     font-size: 30px;
     font-family: 'Capitol City', sans-serif;
+    color: transparent;
+    background: #286780;
+    background: linear-gradient(90deg, rgba(40, 103, 128, 1) 0%, rgba(22, 135, 65, 1) 55%, rgba(44, 191, 179, 1) 100%);
+    background-clip: text;
 }
 
 .previous-chat-list {
@@ -19,6 +23,7 @@
     flex-direction: column;
     gap: 8px;
     min-width: 10%;
+    height: 63.5vh;
 }
 
 .previous-chat {

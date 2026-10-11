@@ -16,7 +16,7 @@ p, button, label, .menu-user-name, span, .menu-brand,
   justify-content: space-between;
   gap: 16px;
   padding: 10px 24px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 3px solid #fff;
   background-color: #9dc0ce;
 }
 
@@ -27,28 +27,35 @@ p, button, label, .menu-user-name, span, .menu-brand,
 .menu-account {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 24px;
 }
 
 .menu-user-name {
   overflow: hidden;
   max-width: 240px;
-  font-size: 14px;
+  font-size: 30px;
+  margin-right: 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: transparent;
+  background: #286780;
+  background: linear-gradient(90deg, rgba(40, 103, 128, 1) 0%, rgba(22, 135, 65, 1) 55%, rgba(44, 191, 179, 1) 100%);
+  background-clip: text;
+  font-family: 'Capitol City', sans-serif;
 }
 
 .menu-logout {
   padding: 7px 11px;
-  border: 1px solid var(--border);
   border-radius: 6px;
   background: transparent;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #0045AC;
 }
 
 .menu-logout:hover {
-  border-color: var(--accent-border);
+  background-color: #4279ca;
 }
 
 .menu-logout:disabled {
