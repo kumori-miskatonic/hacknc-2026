@@ -1,0 +1,25 @@
+.previous-chats h2 {
+    margin-top: 0;
+}
+
+.previous-chat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.previous-chat {
+    display: block;
+    width: 100%;
+    border-radius: 5px;
+    padding: 5px;
+    border: 1px solid transparent;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+}
+
+.previous-chat:hover,
+.previous-chat:focus-visible {
+    border-color: currentColor;
+}

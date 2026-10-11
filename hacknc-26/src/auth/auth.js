@@ -11,6 +11,7 @@ import {
   updateProfile,
 } from 'firebase/auth'
 import { getFirebaseAuth } from './firebase'
+import { registerPublicKey } from '../services/key-service'
 
 const googleProvider = new GoogleAuthProvider()
 
@@ -22,6 +23,7 @@ export async function registerUser(email, password, displayName = '') {
     await updateProfile(credential.user, { displayName: displayName.trim() })
   }
 
+  await registerPublicKey(auth.currentUser.uid); // Create and register device keys for the new user
   return credential.user
 }
 

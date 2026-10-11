@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import Dashboard from './pages/Dashboard.jsx'
+import Chat from './pages/Chat.jsx'
 import './App.css'
 
 function App() {
@@ -32,6 +33,14 @@ function App() {
           element={
             <ProtectedRoute user={user}>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chat/:chatKey"
+          element={
+            <ProtectedRoute user={user}>
+              <Chat />
             </ProtectedRoute>
           }
         />

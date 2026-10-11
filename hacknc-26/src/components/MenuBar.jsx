@@ -47,6 +47,14 @@ function MenuBar() {
           <button
             className="menu-logout"
             type="button"
+            onClick={() => navigate('/dashboard')}
+            disabled={isLoggingOut}
+          >
+            Dashboard
+          </button>
+          <button
+            className="menu-logout"
+            type="button"
             onClick={handleLogout}
             disabled={isLoggingOut}
           >
