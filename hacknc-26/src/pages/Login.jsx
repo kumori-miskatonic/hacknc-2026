@@ -92,10 +92,12 @@ function Login({ onRegister }) {
           </p>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="email" className="general-black-text">Email</label>
+        <form onSubmit={handleSubmit}>                           
+          <label htmlFor="email" className="general-black-text email">
+            Email</label>
           <input
             id="email"
+            className="custom-font"
             type="email"
             autoComplete="email"
             value={email}
@@ -104,8 +106,8 @@ function Login({ onRegister }) {
           />
 
           <div className="password-label">
-            <label htmlFor="password" className="general-black-text">Password</label>
-            <button type="button" onClick={handlePasswordReset} className="">
+            <label htmlFor="password">Password</label>
+            <button type="button" onClick={handlePasswordReset} className="link-txt">
               Forgot password?
             </button>
           </div>
@@ -119,14 +121,15 @@ function Login({ onRegister }) {
             required
           />
 
-          <button className="primary-button" type="submit" disabled={isLoading}>
+          <button className="primary-button custom-font" type="submit" disabled={isLoading}>
             {isLoading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
-        <div className="divider"><span className="login-or">or</span></div>
+        <div className="divider"><span className="login-or general-black-text">
+          or</span></div>
         <button
-          className="google-button general-ui-button"
+          className="google-button general-ui-button custom-font"
           type="button"
           onClick={handleGoogleSignIn}
           disabled={isLoading}
@@ -142,7 +145,7 @@ function Login({ onRegister }) {
 
         <p className="auth-switch">
           Don&apos;t have an account?{' '}
-          <button type="button" onClick={onRegister}>
+          <button type="button" onClick={onRegister} className="link-txt">
             Create one
           </button>
         </p>
