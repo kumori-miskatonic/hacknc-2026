@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { registerUser, signInWithGoogle } from '../auth/auth'
 import './Login.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 function firebaseErrorMessage(error) {
   const messages = {
@@ -19,6 +19,7 @@ function firebaseErrorMessage(error) {
 }
 
 function Register() {
+  const navigate = useNavigate()
   const [displayName, setDisplayName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -39,7 +40,7 @@ function Register() {
 
     try {
       await registerUser(email, password, displayName)
-      setStatus({ type: 'success', message: 'Your account has been created.' })
+      navigate('/dashboard')
     } catch (error) {
       setStatus({ type: 'error', message: firebaseErrorMessage(error) })
     } finally {
@@ -53,7 +54,7 @@ function Register() {
 
     try {
       await signInWithGoogle()
-      setStatus({ type: 'success', message: 'Your account has been created.' })
+      navigate('/dashboard')
     } catch (error) {
       setStatus({ type: 'error', message: firebaseErrorMessage(error) })
     } finally {
