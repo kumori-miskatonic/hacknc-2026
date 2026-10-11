@@ -1,0 +1,67 @@
+.menu-bar {
+  min-height: 56px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.menu-brand {
+  color: var(--text-h);
+  font-size: 17px;
+}
+
+.menu-account {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.menu-user-name {
+  overflow: hidden;
+  max-width: 240px;
+  color: var(--text-h);
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu-logout {
+  padding: 7px 11px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-h);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+}
+
+.menu-logout:hover {
+  border-color: var(--accent-border);
+}
+
+.menu-logout:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.menu-error {
+  margin: 0;
+  color: #991b1b;
+  font-size: 13px;
+}
+
+@media (max-width: 520px) {
+  .menu-bar {
+    padding-inline: 16px;
+  }
+
+  .menu-user-name {
+    max-width: 130px;
+  }
+}

@@ -47,8 +47,7 @@ p, label,
 }
 
 .login-page {
-  min-height: 100vh;
-  min-width: 100vw;
+  min-height: calc(100svh - 57px);
   display: grid;
   place-items: center;
   box-sizing: border-box;

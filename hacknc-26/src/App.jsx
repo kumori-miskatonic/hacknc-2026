@@ -1,15 +1,43 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Route, Routes } from 'react-router-dom'
+import { observeAuthState } from './auth/auth'
+import MenuBar from './components/MenuBar.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
+import Dashboard from './pages/Dashboard.jsx'
 import './App.css'
 
 function App() {
-  const [page, setPage] = useState('login')
+  const [user, setUser] = useState(undefined)
 
-  return page === 'register' ? (
-    <Register onLogin={() => setPage('login')} />
-  ) : (
-    <Login onRegister={() => setPage('register')} />
+  useEffect(() => {
+    try {
+      return observeAuthState(setUser)
+    } catch {
+      queueMicrotask(() => setUser(null))
+      return undefined
+    }
+  }, [])
+
+  return (
+    <>
+      <MenuBar />
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute user={user}>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<h1>404 - Page not found</h1>} />
+      </Routes>
+    </>
   )
 }
 
