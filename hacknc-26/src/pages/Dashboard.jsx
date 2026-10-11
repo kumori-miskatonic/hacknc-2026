@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   createChatRoom,
-  findChatRoom,
+  joinChatRoom,
 } from '../services/chat-room-service'
 
 export default function Dashboard() {
@@ -37,7 +37,7 @@ export default function Dashboard() {
     setIsJoiningChat(true)
 
     try {
-      const room = await findChatRoom(chatKeyInput)
+      const room = await joinChatRoom(chatKeyInput)
       setChatKey(room.chatKey)
       navigate(`/chat/${room.chatKey}`)
     } catch (error) {

@@ -29,3 +29,14 @@
             .MessageBox {
                 flex: 3;
             }
+
+            .MessageBox form {
+                display: flex;
+                gap: 8px;
+            }
+
+            .MessageBox input {
+                flex: 1;
+                min-width: 0;
+                padding: 8px;
+            }

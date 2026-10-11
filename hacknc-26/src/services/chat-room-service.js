@@ -1,4 +1,10 @@
-import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore'
+import {
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+  writeBatch,
+} from 'firebase/firestore'
 import { db, getFirebaseAuth } from '../auth/firebase'
 
 const CHAT_KEY_LENGTH = 6
@@ -44,12 +50,21 @@ export async function createChatRoom(roomName) {
     existingRoom = await getDoc(roomRef(chatKey))
   }
 
-  await setDoc(roomRef(chatKey), {
+  const roomReference = roomRef(chatKey)
+  const memberReference = doc(roomReference, 'members', user.uid)
+  const batch = writeBatch(db)
+
+  batch.set(roomReference, {
     chatKey,
     name: trimmedRoomName,
     ownerId: user.uid,
     createdAt: serverTimestamp(),
   })
+  batch.set(memberReference, {
+    uid: user.uid,
+    joinedAt: serverTimestamp(),
+  })
+  await batch.commit()
 
   return { chatKey, name: trimmedRoomName }
 }
@@ -72,4 +87,20 @@ export async function findChatRoom(chatKey) {
     chatKey: normalizedChatKey,
     name: data.name,
   }
+}
+
+export async function joinChatRoom(chatKey) {
+  const user = getFirebaseAuth().currentUser
+
+  if (!user) {
+    throw new Error('You must sign in first.')
+  }
+
+  const room = await findChatRoom(chatKey)
+  await setDoc(doc(roomRef(room.chatKey), 'members', user.uid), {
+    uid: user.uid,
+    joinedAt: serverTimestamp(),
+  })
+
+  return room
 }
