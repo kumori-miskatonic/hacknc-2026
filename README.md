@@ -1,5 +1,5 @@
-# Project Name
-Project name is a web chat app that gives users the ability to keep their information anonymous while talking to other users.
+# ChatBubble
+ChatBubble is a web chat app that gives users the ability to keep their information anonymous while talking to other users.
 
 ## Table of Contents
 * [About the Project](#about-the-project)
