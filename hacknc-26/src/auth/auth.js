@@ -11,7 +11,7 @@ import {
   updateProfile,
 } from 'firebase/auth'
 import { getFirebaseAuth } from './firebase'
-import { registerPublicKey } from '../services/keyService'
+import { registerPublicKey } from '../services/key-service'
 
 const googleProvider = new GoogleAuthProvider()
 

@@ -68,7 +68,7 @@ export async function createDeviceKeys(uid) {
   const pair = await crypto.subtle.generateKey(
     { name: 'ECDH', namedCurve: 'P-256' },
     true,
-    ['deriveKey'],
+    ['deriveBits'],
   )
 
   const publicJwk = await crypto.subtle.exportKey('jwk', pair.publicKey)
@@ -78,7 +78,7 @@ export async function createDeviceKeys(uid) {
     privateJwk,
     { name: 'ECDH', namedCurve: 'P-256' },
     false,
-    ['deriveKey'],
+    ['deriveBits'],
   )
 
   await savePrivateKey(uid, privateKey)
