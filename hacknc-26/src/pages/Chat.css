@@ -1,16 +1,42 @@
 .chat-page {
     font-family: 'VCR OSD Mono', sans-serif;
-    
+    background-image: url("../assets/bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; 
 }
 
 .chat-page h1 {
     font-family: 'Capitol City', sans-serif;
 }
 
+.chat-page-msg-list {
+    height: 70%;
+}
+
+.chat-page-prev-msg-list {
+    height: 1000px;
+    padding-bottom: 300px;
+}
+
+.past-messages p {
+    text-align: left;
+    padding: 10px;
+}
+
+.past-messages p strong {
+    font-size: 20px;
+    color: transparent;
+  background: #286780;
+  background: linear-gradient(90deg, rgba(40, 103, 128, 1) 0%, rgba(22, 135, 65, 1) 55%, rgba(44, 191, 179, 1) 100%);
+  background-clip: text;
+}
+
 .div1 {
     display: flex;
     gap: 20px;
     max-width: 1200px;
+    height: 1000px;
     margin: 0 auto 0px auto;
     padding: 10px;
 }
@@ -23,19 +49,46 @@
 }
 .past-messages {
     flex: 4;
-    height: 60vh
+    border: 3px solid #fff;
+    border-radius: 16px;
+    height: inherit;
+    padding: 30px;
+  background: rgba(208, 245, 242, 0.2);
+  border: 4px solid #d2e6f1;
+  border-radius: 16px;
+  box-shadow: 0 20px 70px rgba(9, 190, 235, 0.6);
 }
 .chat
 {
     flex: 0.75;
     height: 60vh
 }
+
+.send-message {
+    margin-top: 0;
+    padding-top: 0;
+    width: 200px;
+    height: 40px;
+    justify-self: center;
+    background-color: #0045AC;
+    border-radius: 8px;
+    border: 3px solid transparent;
+    color: #fff;
+    font-size: 18px;
+}
+
+.send-message:hover {
+    background-color: #4279ca;
+}
+
 .row2 {
     gap: 0px;
     height: 10vh;
 }
 .MessageBox {
     flex: 3;
+    border: none;
+    margin-top: 0;
 }
 
 .MessageBox form {
@@ -47,4 +100,8 @@
     flex: 1;
     min-width: 0;
     padding: 8px;
+}
+
+.message-box-input {
+    height: 40px;
 }

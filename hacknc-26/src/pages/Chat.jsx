@@ -178,7 +178,7 @@ export default function Chat() {
       <h1>{roomName || 'Loading chat...'}</h1>
       <p>Chat key: {chatKey}</p>
       <div className="div1">
-        <div className="div2 past-messages">
+        <div className="div2 past-messages chat-page-msg-list">
           <p>Past Messages</p>
           {messages.map((chatMessage) => (
             <p key={chatMessage.id}>
@@ -192,15 +192,17 @@ export default function Chat() {
             </p>
           ))}
         </div>
-        <div className="div2 chat">
-          <PreviousChats chats={chats} onSelectChat={handleSelectChat} />
-        </div>
+      
+          <PreviousChats className="chat-page-prev-msg-list" 
+          chats={chats} onSelectChat={handleSelectChat} />
+      
       </div>
       <div className="div1 row2">
         <div className="div2 MessageBox">
             <form onSubmit={handleSendMessage}>
             <input
               type="text"
+              className="message-box-input"
               value={message}
               onChange={(event) => setMessage(event.target.value)}
               maxLength={2000}
@@ -208,13 +210,12 @@ export default function Chat() {
               aria-label="Message"
               required
             />
-            <button type="submit" disabled={isSending}>
+            <button type="submit" className="send-message" disabled={isSending}>
               {isSending ? 'Sending...' : 'Send'}
             </button>
           </form>
           {sendStatus && <p role="status">{sendStatus}</p>}
         </div>
-        <div className="div2">Username</div>
       </div>
     </main>
   )
