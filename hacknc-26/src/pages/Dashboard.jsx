@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { getFirebaseAuth } from '../auth/firebase'
+import { useNavigate } from 'react-router-dom'
 import {
   createChatRoom,
   findChatRoom,
 } from '../services/chat-room-service'
-import { sendEncryptedMessage } from '../services/message-service'
 
 export default function Dashboard() {
+  const navigate = useNavigate()
   const [status, setStatus] = useState('')
   const [roomName, setRoomName] = useState('')
   const [chatKey, setChatKey] = useState('')
@@ -23,7 +23,7 @@ export default function Dashboard() {
       setRoomName('')
       setChatKey(room.chatKey)
       setChatKeyInput(room.chatKey)
-      setStatus(`Chat created. Share this key: ${room.chatKey}`)
+      navigate(`/chat/${room.chatKey}`)
     } catch (error) {
       setStatus(error.message || 'Unable to create chat.')
     } finally {
@@ -39,7 +39,7 @@ export default function Dashboard() {
     try {
       const room = await findChatRoom(chatKeyInput)
       setChatKey(room.chatKey)
-      setStatus(`Connected to "${room.name}".`)
+      navigate(`/chat/${room.chatKey}`)
     } catch (error) {
       setStatus(error.message || 'Unable to join chat.')
     } finally {
