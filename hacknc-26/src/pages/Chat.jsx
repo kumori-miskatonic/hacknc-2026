@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { getFirebaseAuth } from '../auth/firebase'
 import {
   findChatRoom,
+  getUserChatRooms,
   subscribeToChatMembers,
 } from '../services/chat-room-service'
 import {
@@ -10,8 +11,10 @@ import {
   subscribeToMessages,
 } from '../services/message-service'
 import './Chat.css'
+import PreviousChats from '../components/PreviousChats'
 
 export default function Chat() {
+  const navigate = useNavigate()
   const { chatKey } = useParams()
   const [roomName, setRoomName] = useState('')
   const [recipientUid, setRecipientUid] = useState('')
@@ -20,6 +23,35 @@ export default function Chat() {
   const [sendStatus, setSendStatus] = useState('')
   const [isSending, setIsSending] = useState(false)
   const [messages, setMessages] = useState([])
+  const [chats, setChats] = useState([])
+  const hasLoadedMessagesRef = useRef(false)
+
+  useEffect(() => {
+    let isCurrent = true
+
+    async function loadChats() {
+      try {
+        const userChats = await getUserChatRooms()
+        if (isCurrent) {
+          setChats(userChats)
+        }
+      } catch (loadError) {
+        if (isCurrent) {
+          setError(loadError.message || 'Unable to load previous chats.')
+        }
+      }
+    }
+
+    loadChats()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [])
+
+  function handleSelectChat(chat) {
+    navigate(`/chat/${chat.chatKey}`)
+  }
 
   useEffect(() => {
     let isCurrent = true
@@ -45,6 +77,8 @@ export default function Chat() {
   }, [chatKey])
 
   useEffect(() => {
+    hasLoadedMessagesRef.current = false
+
     const user = getFirebaseAuth().currentUser
 
     if (!user) {
@@ -69,6 +103,12 @@ export default function Chat() {
       chatKey,
       user.uid,
       (receivedMessages) => {
+        if (!hasLoadedMessagesRef.current) {
+          hasLoadedMessagesRef.current = true
+          setMessages(receivedMessages)
+          return
+        }
+
         setMessages((currentMessages) => {
           const messagesById = new Map(
             currentMessages.map((chatMessage) => [
@@ -151,7 +191,9 @@ export default function Chat() {
             </p>
           ))}
         </div>
-        <div className="div2 chat">Chats</div>
+        <div className="div2 chat">
+          <PreviousChats chats={chats} onSelectChat={handleSelectChat} />
+        </div>
       </div>
       <div className="div1 row2">
         <div className="div2 MessageBox">

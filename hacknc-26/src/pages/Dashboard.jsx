@@ -1,9 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   createChatRoom,
+  getUserChatRooms,
   joinChatRoom,
 } from '../services/chat-room-service'
+import PreviousChats from '../components/PreviousChats'
+import './Dashboard.css'
 
 export default function Dashboard() {
   const navigate = useNavigate()
@@ -13,6 +16,34 @@ export default function Dashboard() {
   const [chatKeyInput, setChatKeyInput] = useState('')
   const [isCreatingChat, setIsCreatingChat] = useState(false)
   const [isJoiningChat, setIsJoiningChat] = useState(false)
+  const [chats, setChats] = useState([])
+
+  useEffect(() => {
+    let isCurrent = true
+
+    async function loadChats() {
+      try {
+        const userChats = await getUserChatRooms()
+        if (isCurrent) {
+          setChats(userChats)
+        }
+      } catch (error) {
+        if (isCurrent) {
+          setStatus(error.message || 'Unable to load previous chats.')
+        }
+      }
+    }
+
+    loadChats()
+
+    return () => {
+      isCurrent = false
+    }
+  }, [])
+
+  function handleSelectChat(chat) {
+    navigate(`/chat/${chat.chatKey}`)
+  }
 
   async function handleCreateChat() {
     setStatus('')
@@ -49,40 +80,45 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-      <h1>Welcome to the Dashboard</h1>
-      <div>
-        <input
-          type="text"
-          value={roomName}
-          onChange={(event) => setRoomName(event.target.value)}
-          maxLength={100}
-          placeholder="Room name"
-          aria-label="Room name"
-        />
-        <button
-          type="button"
-          onClick={handleCreateChat}
-          disabled={isCreatingChat}
-        >
-          {isCreatingChat ? 'Creating...' : 'Create chat key'}
-        </button>
-        <form onSubmit={handleJoinChat}>
+      <div className="dashboard-content">
+        <section className="dashboard-main">
+          <h1>Welcome to the Dashboard</h1>
           <input
             type="text"
-            value={chatKeyInput}
-            onChange={(event) => setChatKeyInput(event.target.value)}
-            maxLength={6}
-            pattern="[A-Za-z0-9]{6}"
-            placeholder="Chat key"
-            aria-label="Chat key"
+            value={roomName}
+            onChange={(event) => setRoomName(event.target.value)}
+            maxLength={100}
+            placeholder="Room name"
+            aria-label="Room name"
           />
-          <button type="submit" disabled={isJoiningChat}>
-            {isJoiningChat ? 'Joining...' : 'Join chat'}
+          <button
+            type="button"
+            onClick={handleCreateChat}
+            disabled={isCreatingChat}
+          >
+            {isCreatingChat ? 'Creating...' : 'Create chat key'}
           </button>
-        </form>
+          <form onSubmit={handleJoinChat}>
+            <input
+              type="text"
+              value={chatKeyInput}
+              onChange={(event) => setChatKeyInput(event.target.value)}
+              maxLength={6}
+              pattern="[A-Za-z0-9]{6}"
+              placeholder="Chat key"
+              aria-label="Chat key"
+            />
+            <button type="submit" disabled={isJoiningChat}>
+              {isJoiningChat ? 'Joining...' : 'Join chat'}
+            </button>
+          </form>
+          {chatKey && <p>Current chat: {chatKey}</p>}
+          {status && <p role="status">{status}</p>}
+        </section>
+        <aside className="dashboard-sidebar">
+          <PreviousChats chats={chats} onSelectChat={handleSelectChat} />
+        </aside>
       </div>
-      {chatKey && <p>Current chat: {chatKey}</p>}
-      {status && <p role="status">{status}</p>}
     </div>
   )
 }

@@ -1,11 +1,14 @@
 import {
   doc,
   collection,
+  collectionGroup,
   getDocs,
   getDoc,
   onSnapshot,
+  query,
   serverTimestamp,
   setDoc,
+  where,
   writeBatch,
 } from 'firebase/firestore'
 import { db, getFirebaseAuth } from '../auth/firebase'
@@ -123,6 +126,38 @@ export async function getChatMembers(chatKey) {
     uid: memberSnapshot.id,
     ...memberSnapshot.data(),
   }))
+}
+
+export async function getUserChatRooms() {
+  const user = getFirebaseAuth().currentUser
+
+  if (!user) {
+    throw new Error('You must sign in first.')
+  }
+
+  const membershipsSnapshot = await getDocs(
+    query(collectionGroup(db, 'members'), where('uid', '==', user.uid)),
+  )
+
+  const rooms = await Promise.all(
+    membershipsSnapshot.docs.map(async (membershipSnapshot) => {
+      const roomDocument = membershipSnapshot.ref.parent.parent
+      const roomSnapshot = await getDoc(roomDocument)
+
+      if (!roomSnapshot.exists()) {
+        return null
+      }
+
+      const room = roomSnapshot.data()
+      return {
+        id: roomSnapshot.id,
+        chatKey: roomSnapshot.id,
+        name: room.name,
+      }
+    }),
+  )
+
+  return rooms.filter(Boolean)
 }
 
 export function subscribeToChatMembers(chatKey, onMembers, onError) {

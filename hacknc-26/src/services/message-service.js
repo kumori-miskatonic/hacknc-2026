@@ -79,15 +79,22 @@ export function subscribeToMessages(
           snapshot.docs
             .filter((messageSnapshot) => {
               const data = messageSnapshot.data()
-              return data.recipientId === currentUserUid
+              return (
+                data.recipientId === currentUserUid ||
+                data.senderId === currentUserUid
+              )
             })
             .map(async (messageSnapshot) => {
               const data = messageSnapshot.data()
               try {
-                const senderPublicKey = await getPublicKey(data.senderId)
+                const peerUid =
+                  data.senderId === currentUserUid
+                    ? data.recipientId
+                    : data.senderId
+                const peerPublicKey = await getPublicKey(peerUid)
                 const conversationKey = await deriveConversationKey(
                   currentUserUid,
-                  senderPublicKey,
+                  peerPublicKey,
                   roomId,
                 )
                 const plaintext = await decryptMessage(
