@@ -1,42 +1,50 @@
+.chat-page {
+    font-family: 'VCR OSD Mono', sans-serif;
+    
+}
 
-            .div1 {
-                display: flex;
-                gap: 20px;
-                max-width: 1200px;
-                margin: 0 auto 0px auto;
-                padding: 10px;
-            }
+.chat-page h1 {
+    font-family: 'Capitol City', sans-serif;
+}
 
-            .div2 {
-                box-sizing: border-box;
-                flex: 1;
-                border: 2px solid black;
-                padding: 15px;
-            }
-            .past-messages {
-                flex: 4;
-                height: 60vh
-            }
-            .chat
-            {
-                flex: 0.75;
-                height: 60vh
-            }
-            .row2 {
-                gap: 0px;
-                height: 10vh;
-            }
-            .MessageBox {
-                flex: 3;
-            }
+.div1 {
+    display: flex;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto 0px auto;
+    padding: 10px;
+}
 
-            .MessageBox form {
-                display: flex;
-                gap: 8px;
-            }
+.div2 {
+    box-sizing: border-box;
+    flex: 1;
+    border: 2px solid black;
+    padding: 15px;
+}
+.past-messages {
+    flex: 4;
+    height: 60vh
+}
+.chat
+{
+    flex: 0.75;
+    height: 60vh
+}
+.row2 {
+    gap: 0px;
+    height: 10vh;
+}
+.MessageBox {
+    flex: 3;
+}
 
-            .MessageBox input {
-                flex: 1;
-                min-width: 0;
-                padding: 8px;
-            }
+.MessageBox form {
+    display: flex;
+    gap: 8px;
+}
+
+.MessageBox input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px;
+}

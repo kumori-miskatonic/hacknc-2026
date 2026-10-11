@@ -7,6 +7,7 @@ import {
 } from '../services/chat-room-service'
 import PreviousChats from '../components/PreviousChats'
 import './Dashboard.css'
+import '../pages/Login.css'
 
 export default function Dashboard() {
   const navigate = useNavigate()
@@ -93,6 +94,7 @@ export default function Dashboard() {
           />
           <button
             type="button"
+            className="general-ui-button dashboard-button"
             onClick={handleCreateChat}
             disabled={isCreatingChat}
           >
@@ -108,7 +110,8 @@ export default function Dashboard() {
               placeholder="Chat key"
               aria-label="Chat key"
             />
-            <button type="submit" disabled={isJoiningChat}>
+            <button type="submit" className="general-ui-button dashboard-button"
+            disabled={isJoiningChat}>
               {isJoiningChat ? 'Joining...' : 'Join chat'}
             </button>
           </form>

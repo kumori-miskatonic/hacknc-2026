@@ -12,6 +12,7 @@ import {
 } from '../services/message-service'
 import './Chat.css'
 import PreviousChats from '../components/PreviousChats'
+import "../pages/Login.css"
 
 export default function Chat() {
   const navigate = useNavigate()
