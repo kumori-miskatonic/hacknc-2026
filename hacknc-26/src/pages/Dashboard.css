@@ -8,6 +8,10 @@
   background-color: #c7d6ec;
   min-width: 100vw;
   min-height: 120vh;
+  background-image: url("../assets/bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .dashboard-main {

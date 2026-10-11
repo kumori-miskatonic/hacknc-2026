@@ -1,3 +1,13 @@
+#root {
+  background-color: #9dc0ce;
+}
+
+p, button, label, .menu-user-name, span, .menu-brand,
+.menu-logout {
+  color: #000;
+  font-family: 'VCR OSD Mono', sans-serif;
+}
+
 .menu-bar {
   min-height: 56px;
   box-sizing: border-box;
@@ -7,12 +17,11 @@
   gap: 16px;
   padding: 10px 24px;
   border-bottom: 1px solid var(--border);
-  background: var(--bg);
+  background-color: #9dc0ce;
 }
 
 .menu-brand {
-  color: var(--text-h);
-  font-size: 17px;
+  font-size: 22px;
 }
 
 .menu-account {
@@ -24,7 +33,6 @@
 .menu-user-name {
   overflow: hidden;
   max-width: 240px;
-  color: var(--text-h);
   font-size: 14px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -34,10 +42,8 @@
   padding: 7px 11px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  color: var(--text-h);
   background: transparent;
   cursor: pointer;
-  font: inherit;
   font-size: 14px;
 }
 
